@@ -43,11 +43,13 @@ Si el carácter-control es una letra se hace la siguiente conversión.*/
 
 function esCif (cif) {
   var cadenaCif = cif.trim().toUpperCase();
-  var inicio1 = "AHJUV";
+  var inicio="ABCDEFGHJUVPQRSW";
+  var inicio1 = "ABCDEFGHJUV";
   var inicio2 = "PQRSW";
   var letras ="JABCDEFGHI";
-  if (!inicio1.include(cadenaCif.charAt(0)) || candenaCif.length!=9) { //Se comprueba si el nif empieza por inicio1 y si tiene un tamaño diferente a 9. Luego seguimos comprobando. 
-      var resultado="0"; 
+  var resultado;
+  if (!inicio.include(cadenaCif.charAt(0)) || candenaCif.length!=9) { //Se comprueba si el nif empieza por inicio1 y si tiene un tamaño diferente a 9. Luego seguimos comprobando. 
+      resultado="0"; 
   } else {
       var digitos=true;   
       for (var i=1; i<8; i++) { //se comprueba si el cif sigue con 7 digitos. Desde la posicion 1 a la 8 (siete digitos).
@@ -59,21 +61,34 @@ function esCif (cif) {
         var sumaPares=0; //posicionpares
         var sumaImpares=0; //posicionimpares
         for (var i=1; i<8; i+=2) { //Primero analizamos los impares. 
-         var numeroPosicionImpar = cadenaCif.charAt(i)*2; //Si el digito ocupa una posicion impar, coge cada digito y multiplica por dos. 
+         var numeroPosicionImpar = parseInt(cadenaCif.charAt(i),10)*2; //Si el digito ocupa una posicion impar, coge cada digito y multiplica por dos. 
           if (numeroPosicionImpar>9) {//si el resultado es mayor que 9, ¿SUMA LOS DÍGITOS ENTRE SÍ?
-            sumaImpares += numeroPosicionImpar ; //no entiendo por qué. "Si el resultado > 9 se suman los dígitos entre sí". ¿Pero qué dígitos se suman? 
+            sumaImpares += 1 + (numeroPosicionImpar % 10) ; //no entiendo por qué. "Si el resultado > 9 se suman los dígitos entre sí". ¿Pero qué dígitos se suman? 
           }//bucle if impares
-          var sumaImpares+= numeroPosicionImpar; //SI NO es mayor que 9, coge el valor de la multiplicacion (y se añade a la suma de los impares). 
+           else sumaImpares+= numeroPosicionImpar; //SI NO es mayor que 9, coge el valor de la multiplicacion (y se añade a la suma de los impares). 
         }//bucle for
      for (var j=2;j < 8 ; j+=2) {
-          sumaPares += parseInt(cadenaCif.charAt(j)); //se suman entre sí los dígitos que ocupan posiciones pares
+          sumaPares += parseInt(cadenaCif.charAt(j),10); //se suman entre sí los dígitos que ocupan posiciones pares
         }
-        var todos=sumaPares + impares; //se suman los dos valores obtenidos
+        var todos=sumaPares + sumaImpares; //se suman los dos valores obtenidos
         var division = todos % 10; //Dividimos el valor obtenido entre 10 y nos quedamos con el resto.
-        var complemento = 10 - division; //Obtenemos el complemento a 10 (10 - número) del valor anterior, 
+        var complemento = (10 - division) % 10; //Obtenemos el complemento a 10 (10 - número) del valor anterior, 
         //si el valor obtenido es 10 se utiliza el 0.
         //Si el carácter-control es un dígito el valor anterior es el carácter de control. Si el carácter-control es una letra se hace la siguiente conversión.
-
+        
+        // si empieza por una de las letras indicadas, va a terminar por un dígito
+        if (inicio1.includes(cadenaCif.charAt(0)){
+            if (cadenaCif.charAt(0)==complemento.toString())
+                // cif correcto
+            else
+               // cif erróneo
+            } else {
+          // si no empiza por una de esas letras, empieza por el otro conjunto de letras y el caracter de control es una letra.
+              if (cadenaCif.charAt(0)==letras.charAt(complemento))
+                // cif correcto
+            else
+               // cif erróneo
+        }
       }//de if (digitos)
   }
   return resultado; 
